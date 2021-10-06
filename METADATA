@@ -1,3 +1,15 @@
+name: "xz-embedded"
+description: "XZ Embedded"
 third_party {
+  url {
+    type: GIT
+    value: "https://git.tukaani.org/?p=xz-embedded.git"
+  }
+  version: "79b68de5657beecfad575578a7181cf6fca869cb"
   license_type: UNENCUMBERED
+  last_upgrade_date {
+    year: 2017
+    month: 4
+    day: 7
+  }
 }
