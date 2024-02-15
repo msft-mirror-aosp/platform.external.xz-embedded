@@ -18,6 +18,8 @@ license {
 cc_library_static {
     name: "libxz",
     host_supported: true,
+    ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     srcs: [
         "linux/lib/xz/xz_crc32.c",
