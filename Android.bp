@@ -33,6 +33,7 @@ cc_library_static {
     cflags: [
         "-DXZ_DEC_X86",
         "-DXZ_DEC_ARM",
+        "-DXZ_DEC_ARM64",
         "-DXZ_DEC_ARMTHUMB",
         "-Wall",
         "-Werror",
