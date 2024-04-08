@@ -33,12 +33,12 @@ cc_library_static {
     ],
     local_include_dirs: ["userspace"],
 
-    // Enable branch/call/jump filters. See http://b/27817327.
+    // We don't enable branch/call/jump filters because they have no impact on
+    // Android OTA sizes (measured in http://b/329112384). The frequent
+    // function calls this is supposed to optimize will all go via the PLT, so
+    // the actual branch/call/jump instructions in the ELF file will be zeroed
+    // out anyway.
     cflags: [
-        "-DXZ_DEC_X86",
-        "-DXZ_DEC_ARM",
-        "-DXZ_DEC_ARM64",
-        "-DXZ_DEC_ARMTHUMB",
         "-Wall",
         "-Werror",
     ],
