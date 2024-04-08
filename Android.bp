@@ -21,6 +21,10 @@ cc_library_static {
     ramdisk_available: true,
     vendor_ramdisk_available: true,
     recovery_available: true,
+    visibility: [
+        "//system/update_engine:__subpackages__",
+        "//tools/security/fuzzing/llm/xz_fuzzer:__subpackages__",
+    ],
     srcs: [
         "linux/lib/xz/xz_crc32.c",
         "linux/lib/xz/xz_dec_bcj.c",
