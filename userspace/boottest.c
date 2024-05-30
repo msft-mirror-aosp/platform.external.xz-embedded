@@ -1,10 +1,9 @@
+// SPDX-License-Identifier: 0BSD
+
 /*
  * Test application for xz_boot.c
  *
  * Author: Lasse Collin <lasse.collin@tukaani.org>
- *
- * This file has been put into the public domain.
- * You can do whatever you want with this file.
  */
 
 #include <stdlib.h>
@@ -19,6 +18,12 @@ static void error(/*const*/ char *msg)
 	fprintf(stderr, "%s\n", msg);
 }
 
+/*
+ * Disable XZ_UNSUPPORTED_CHECK as it's not used in Linux and thus
+ * decompress_unxz.c doesn't handle it either (it thinks it's a bug).
+ */
+#undef XZ_DEC_ANY_CHECK
+
 /* Disable the CRC64 support even if it was enabled in the Makefile. */
 #undef XZ_USE_CRC64
 
@@ -27,12 +32,12 @@ static void error(/*const*/ char *msg)
 static uint8_t in[1024 * 1024];
 static uint8_t out[1024 * 1024];
 
-static int fill(void *buf, unsigned int size)
+static long fill(void *buf, unsigned long size)
 {
 	return fread(buf, 1, size, stdin);
 }
 
-static int flush(/*const*/ void *buf, unsigned int size)
+static long flush(/*const*/ void *buf, unsigned long size)
 {
 	return fwrite(buf, 1, size, stdout);
 }
@@ -42,7 +47,8 @@ static void test_buf_to_buf(void)
 	size_t in_size;
 	int ret;
 	in_size = fread(in, 1, sizeof(in), stdin);
-	ret = decompress(in, in_size, NULL, NULL, out, NULL, &error);
+	ret = __decompress(in, in_size, NULL, NULL, out, sizeof(out),
+			NULL, &error);
 	/* fwrite(out, 1, FIXME, stdout); */
 	fprintf(stderr, "ret = %d\n", ret);
 }
@@ -50,17 +56,19 @@ static void test_buf_to_buf(void)
 static void test_buf_to_cb(void)
 {
 	size_t in_size;
-	int in_used;
+	long in_used;
 	int ret;
 	in_size = fread(in, 1, sizeof(in), stdin);
-	ret = decompress(in, in_size, NULL, &flush, NULL, &in_used, &error);
-	fprintf(stderr, "ret = %d; in_used = %d\n", ret, in_used);
+	ret = __decompress(in, in_size, NULL, &flush, NULL, sizeof(out),
+			&in_used, &error);
+	fprintf(stderr, "ret = %d; in_used = %ld\n", ret, in_used);
 }
 
 static void test_cb_to_cb(void)
 {
 	int ret;
-	ret = decompress(NULL, 0, &fill, &flush, NULL, NULL, &error);
+	ret = __decompress(NULL, 0, &fill, &flush, NULL, sizeof(out),
+			NULL, &error);
 	fprintf(stderr, "ret = %d\n", ret);
 }
 
@@ -70,11 +78,12 @@ static void test_cb_to_cb(void)
  */
 static void test_cb_to_buf(void)
 {
-	int in_used;
+	long in_used;
 	int ret;
-	ret = decompress(in, 0, &fill, NULL, out, &in_used, &error);
+	ret = __decompress(in, 0, &fill, NULL, out, sizeof(out),
+			&in_used, &error);
 	/* fwrite(out, 1, FIXME, stdout); */
-	fprintf(stderr, "ret = %d; in_used = %d\n", ret, in_used);
+	fprintf(stderr, "ret = %d; in_used = %ld\n", ret, in_used);
 }
 
 int main(int argc, char **argv)
