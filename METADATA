@@ -8,12 +8,12 @@ third_party {
   license_type: UNENCUMBERED
   last_upgrade_date {
     year: 2024
-    month: 2
-    day: 26
+    month: 5
+    day: 30
   }
   identifier {
     type: "Git"
     value: "https://git.tukaani.org/xz-embedded.git"
-    version: "1b6defd544914bfb4065e343296e5db64ef400e6"
+    version: "d4a9bc83c72d8087fe36ff388e89599626da7873"
   }
 }
